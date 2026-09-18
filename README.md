@@ -67,8 +67,8 @@ GitHub Actions 的手动构建工作流会固定校验 Inno Setup 7.1.0 下载�
 
 ## Code signing policy
 
-当前发布产物未签名；SignPath Foundation 尚未接受本项目，项目没有签名凭据，也没有
-提交过签名请求。未来政策、可信构建和人工批准边界见
+Code signing
+The project is applying to the SignPath Foundation open-source code signing program. If accepted, future signed Windows releases will use code signing provided by SignPath.io, with a certificate issued by SignPath Foundation. Current release artifacts are unsigned.
 [Code signing policy](CODE_SIGNING.md) 与 [SignPath readiness](docs/signpath-readiness.md)。
 
 ## Licenses
