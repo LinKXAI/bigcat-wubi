@@ -30,9 +30,9 @@ or claim authorship or ownership of Weasel, `rime-wubi`, or librime.
 
 ## Project roles
 
-- Authors: [LinKXAI](https://github.com/LinKXAI)
-- Reviewers: [LinKXAI](https://github.com/LinKXAI)
-- Approvers: [LinKXAI](https://github.com/LinKXAI)
+- **Authors:** [LinKXAI](https://github.com/LinKXAI)
+- **Reviewers:** [LinKXAI](https://github.com/LinKXAI)
+- **Approvers:** [LinKXAI](https://github.com/LinKXAI)
 
 Actual people must be assigned to these roles before applying to or configuring
 SignPath. Role overlap is allowed only if SignPath permits it and never removes
