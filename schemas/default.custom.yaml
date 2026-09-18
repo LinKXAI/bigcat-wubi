@@ -1,0 +1,3 @@
+# Add 大猫输入法 without replacing the user's existing schema list.
+patch:
+  "schema_list/@next": { schema: damao_wubi }

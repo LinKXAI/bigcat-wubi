@@ -1,0 +1,81 @@
+# Rime schema
+# encoding: utf-8
+
+schema:
+  schema_id: damao_wubi_alpha03
+  name: "大猫五笔（原生学习兼容方案）"
+  version: "0.3.0-alpha.2"
+  author:
+    - DaMao Input Method contributors
+  description: |
+    保留独立物理用户词典身份的原生学习兼容方案。
+    单字、已有词组和 2–4 字自动生成新词统一进入独立用户词典学习。
+
+switches:
+  - name: ascii_mode
+    reset: 0
+    states: [ 中文, 西文 ]
+  - name: full_shape
+    states: [ 半角, 全角 ]
+  - name: ascii_punct
+    states: [ 中文标点, 西文标点 ]
+
+engine:
+  processors:
+    - ascii_composer
+    - recognizer
+    - key_binder
+    - speller
+    - punctuator
+    - selector
+    - navigator
+    - express_editor
+  segmentors:
+    - ascii_segmentor
+    - matcher
+    - abc_segmentor
+    - punct_segmentor
+    - fallback_segmentor
+  translators:
+    - punct_translator
+    - table_translator
+
+speller:
+  alphabet: zyxwvutsrqponmlkjihgfedcba
+  delimiter: " ;'"
+  max_code_length: 4
+  auto_select: true
+
+# This compatibility schema uses librime's native table Memory for character and phrase
+# learning. Commit history encoding constructs new phrases up to four Chinese
+# characters with the encoder rules declared by wubi86.dict.yaml.
+translator:
+  dictionary: wubi86
+  user_dict: damao_wubi_alpha03
+  enable_user_dict: true
+  enable_sentence: false
+  enable_encoder: true
+  encode_commit_history: true
+  max_phrase_length: 4
+  enable_completion: true
+
+punctuator:
+  import_preset: default
+  digit_separators: "."
+
+key_binder:
+  import_preset: default
+  bindings:
+    __patch:
+      - key_bindings:/emacs_editing
+      - key_bindings:/move_by_word_with_tab
+      - key_bindings:/paging_with_minus_equal
+      - key_bindings:/numbered_mode_switch
+      - __append:
+          - { when: composing, accept: Return, send: Escape }
+          - { when: has_menu, accept: semicolon, send: 2 }
+          - { when: has_menu, accept: apostrophe, send: 3 }
+          - { when: has_menu, accept: period, send: period }
+
+recognizer:
+  import_preset: default

@@ -1,0 +1,22 @@
+# Rime build products and user data must never enter source control.
+build/
+*.bin
+*.reverse.bin
+*.table.bin
+*.userdb/
+*.userdb.kct
+*.userdb.txt
+*.log
+installation.yaml
+user.yaml
+sync/
+backups/
+
+# Generated packaging output.
+dist/
+
+# Local editor and OS state.
+.idea/
+.vscode/
+Thumbs.db
+Desktop.ini

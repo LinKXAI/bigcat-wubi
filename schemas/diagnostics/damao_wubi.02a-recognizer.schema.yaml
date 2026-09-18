@@ -1,0 +1,46 @@
+# Group 2 isolation: 01 plus the recognizer processor, matcher, and preset.
+
+schema:
+  schema_id: damao_wubi
+  name: "大猫输入法 Diagnostic 02a - Recognizer"
+  version: "0.1-diag-02a"
+
+engine:
+  processors:
+    - ascii_composer
+    - recognizer
+    - key_binder
+    - speller
+    - punctuator
+    - selector
+    - navigator
+    - express_editor
+  segmentors:
+    - ascii_segmentor
+    - matcher
+    - abc_segmentor
+    - punct_segmentor
+    - fallback_segmentor
+  translators:
+    - punct_translator
+    - table_translator
+
+speller:
+  alphabet: zyxwvutsrqponmlkjihgfedcba
+  delimiter: " ;'"
+  max_code_length: 4
+  auto_select: true
+
+translator:
+  dictionary: wubi86
+  enable_user_dict: false
+  enable_sentence: false
+
+punctuator:
+  import_preset: default
+
+key_binder:
+  import_preset: default
+
+recognizer:
+  import_preset: default

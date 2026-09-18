@@ -1,0 +1,50 @@
+name: Validate repository
+
+on:
+  workflow_call:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: windows-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Verify configuration and repository hygiene
+        shell: pwsh
+        run: ./scripts/verify.ps1
+      - name: Test comprehensive harness
+        shell: powershell
+        run: ./tests/Run-DaMaoTests.ps1
+      - name: Test Public Baseline V1 with Windows PowerShell 5.1
+        shell: powershell
+        run: ./tests/Test-DaMaoUserDbPortabilityP0.ps1
+      - name: Test Public Baseline V1 with PowerShell 7
+        shell: pwsh
+        run: ./tests/Test-DaMaoUserDbPortabilityP0.ps1
+      - name: Test P1 portability contract with Windows PowerShell 5.1
+        shell: powershell
+        run: ./tests/Test-DaMaoUserDbPortabilityP1.ps1
+      - name: Test P1 portability contract with PowerShell 7
+        shell: pwsh
+        run: ./tests/Test-DaMaoUserDbPortabilityP1.ps1
+      - name: Test P2 hermetic contract with Windows PowerShell 5.1
+        shell: powershell
+        run: ./tests/Test-DaMaoUserDbPortabilityP2.ps1 -HermeticOnly
+      - name: Test P2 hermetic contract with PowerShell 7
+        shell: pwsh
+        run: ./tests/Test-DaMaoUserDbPortabilityP2.ps1 -HermeticOnly
+      - name: Test P3 hermetic contract with Windows PowerShell 5.1
+        shell: powershell
+        run: ./tests/Test-DaMaoUserDbPortabilityP3.ps1 -HermeticOnly
+      - name: Test P3 hermetic contract with PowerShell 7
+        shell: pwsh
+        run: ./tests/Test-DaMaoUserDbPortabilityP3.ps1 -HermeticOnly

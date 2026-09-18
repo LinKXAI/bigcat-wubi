@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "components": [
+    {
+      "name": "Weasel",
+      "repository": "https://github.com/rime/weasel",
+      "version": "0.17.4",
+      "upstreamAsset": "https://github.com/rime/weasel/releases/download/0.17.4/weasel-0.17.4.0-installer.exe",
+      "license": "GPL-3.0",
+      "files": [
+        {
+          "path": "third_party/weasel/0.17.4/weasel-0.17.4.0-installer.exe",
+          "size": 12431118,
+          "sha256": "CF509534A8F5F8AF9C98ED7CBB8F135439F145A8CBE7E50EDE42BB5B5AB45C29"
+        },
+        {
+          "path": "third_party/weasel/0.17.4/LICENSE.txt",
+          "size": 35147,
+          "sha256": "8CEB4B9EE5ADEDDE47B31E975C1D90C73AD27B6B165A1DCD80C7C545EB65B903"
+        }
+      ]
+    },
+    {
+      "name": "rime-wubi",
+      "repository": "https://github.com/rime/rime-wubi",
+      "commit": "152a0d3f3efe40cae216d1e3b338242446848d07",
+      "upstreamTree": "https://github.com/rime/rime-wubi/tree/152a0d3f3efe40cae216d1e3b338242446848d07",
+      "license": "LGPL-3.0",
+      "files": [
+        {
+          "path": "third_party/rime/rime-wubi/LICENSE",
+          "size": 7651,
+          "sha256": "DA7EABB7BAFDF7D3AE5E9F223AA5BDC1EECE45AC569DC21B3B037520B4464768"
+        },
+        {
+          "path": "third_party/rime/rime-wubi/README.md",
+          "size": 399,
+          "sha256": "05DC392A3F6B2B93EA61411A909380615A2D99D018C6A041C4A6EE96BA74132E"
+        },
+        {
+          "path": "third_party/rime/rime-wubi/wubi86.dict.yaml",
+          "size": 2289545,
+          "sha256": "F833D86B72341FE82E069A425B6625F29EF85F1BC0F34F6FB7975FE514888B5A"
+        },
+        {
+          "path": "third_party/rime/rime-wubi/wubi86.schema.yaml",
+          "size": 1542,
+          "sha256": "CDB5AAC1A9AA071552D5FDFFDFE5A6618B429B19358B8B1E003130E835D5A166"
+        }
+      ]
+    }
+  ]
+}

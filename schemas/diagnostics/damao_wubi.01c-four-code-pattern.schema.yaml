@@ -1,0 +1,41 @@
+# Diagnostic variant: four-code auto selection without max_code_length.
+# librime 1.13.1 applies auto_select_pattern as a full regex match.
+
+schema:
+  schema_id: damao_wubi
+  name: "大猫输入法 Diagnostic 01c - Four Code Pattern"
+  version: "0.1-diag-01c"
+
+engine:
+  processors:
+    - ascii_composer
+    - key_binder
+    - speller
+    - punctuator
+    - selector
+    - navigator
+    - express_editor
+  segmentors:
+    - ascii_segmentor
+    - abc_segmentor
+    - punct_segmentor
+    - fallback_segmentor
+  translators:
+    - punct_translator
+    - table_translator
+
+speller:
+  alphabet: zyxwvutsrqponmlkjihgfedcba
+  auto_select: true
+  auto_select_pattern: "^[a-z]{4}$"
+
+translator:
+  dictionary: wubi86
+  enable_user_dict: false
+  enable_sentence: false
+
+punctuator:
+  import_preset: default
+
+key_binder:
+  import_preset: default

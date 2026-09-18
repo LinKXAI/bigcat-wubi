@@ -1,0 +1,161 @@
+{
+  "format_version": 1,
+  "contract_id": "bigcat-wubi-public-baseline-v1",
+  "contract_version": 1,
+  "status": "Public Baseline V1",
+  "revision_policy": "Any change to a pinned file requires an explicit reviewed update to this manifest and the public baseline tests.",
+  "identity_dimensions": [
+    {
+      "field": "logical_role",
+      "meaning": "A portability policy role that groups explicitly admitted database identities."
+    },
+    {
+      "field": "schema_id",
+      "meaning": "The Rime schema identifier that selects an input schema."
+    },
+    {
+      "field": "db_name",
+      "meaning": "The physical librime user-dictionary database name handled through official librime interfaces."
+    }
+  ],
+  "identity_contract": {
+    "version": 1,
+    "logical_roles": [
+      {
+        "logical_role": "PureWubi",
+        "default_portability_scope": true,
+        "physical_identities": [
+          {
+            "identity_id": "purewubi.alpha03",
+            "schema_id": "damao_wubi_alpha03",
+            "db_name": "damao_wubi_alpha03",
+            "lifecycle": "current"
+          },
+          {
+            "identity_id": "purewubi.legacy",
+            "schema_id": "damao_wubi",
+            "db_name": "damao_wubi",
+            "lifecycle": "legacy"
+          }
+        ],
+        "coexistence_policy": "preserve_separate",
+        "automatic_merge": false,
+        "automatic_rename": false
+      }
+    ],
+    "default_exclusions": [
+      {
+        "schema_id": "damao_wubi_pinyin",
+        "db_name": "damao_wubi_pinyin",
+        "reason": "Not a PureWubi member by default.",
+        "future_explicit_logical_role_required": true
+      }
+    ],
+    "unknown_db_policy": "reject_unclassified",
+    "migration_rules": []
+  },
+  "semantic_invariants": [
+    "PureWubi physical identities remain separate",
+    "No automatic merge or rename",
+    "Pinyin remains excluded unless explicitly classified",
+    "No automatic migration",
+    "Strict snapshot parsing",
+    "Package V2 backup semantics",
+    "Restore authorization and preflight before mutation",
+    "Safety backup before destructive restore",
+    "Native ABI and version validation",
+    "Privacy-preserving output and failure handling",
+    "Malformed or ambiguous UserDB input is rejected"
+  ],
+  "current_file_integrity": {
+    "hash_algorithm": "SHA-256",
+    "path_basis": "repository-relative",
+    "files": [
+      {
+        "path": "schemas/damao_wubi.schema.yaml",
+        "category": "installed-schema",
+        "sha256": "651A0EA5EE42CABD39F4D38A2C580AA04D7C95604DAC2AE6D67547470536080C"
+      },
+      {
+        "path": "schemas/damao_wubi_alpha03.schema.yaml",
+        "category": "portability-identity-schema",
+        "sha256": "A163235BA7B688F032AC79822AEA9AC89BAA88DA343D25BE3A21958281788694"
+      },
+      {
+        "path": "schemas/damao_wubi_pinyin.schema.yaml",
+        "category": "excluded-identity-schema",
+        "sha256": "FFDC66235AD4500AF11D53F16B3C3436BA26E93133E49A9091A4D311EC6FB686"
+      },
+      {
+        "path": "scripts/DaMao.UserDbSnapshot.ps1",
+        "category": "snapshot-parser-and-status",
+        "sha256": "736A923BDCC2BF2677E40914D579C2DAD761EBF3F03642EFF1C478DEF8645970"
+      },
+      {
+        "path": "scripts/DaMao.UserDbPortabilityP2.ps1",
+        "category": "backup-policy",
+        "sha256": "7ABA6E7B19B44623399F3035CDEEA4880A72CFA575AB53DEC69F333DE5AA5CA8"
+      },
+      {
+        "path": "scripts/DaMao.UserDbPortabilityP3.ps1",
+        "category": "restore-policy",
+        "sha256": "5D72FC220B90C05EA5788C100376AD464458E90725E223159D3543C14B968CD9"
+      },
+      {
+        "path": "scripts/Backup-DaMaoUserDictionary.ps1",
+        "category": "backup-entrypoint",
+        "sha256": "D6C31539CBF59FB71936EB29A9CE8F20372765EE163D3125F24C94B42E48F31C"
+      },
+      {
+        "path": "scripts/Restore-DaMaoUserDictionary.ps1",
+        "category": "restore-entrypoint",
+        "sha256": "BDA16451D77B2E3F1D14F4251AC6EB2744370BAEE8563287FC360F7D7821950F"
+      },
+      {
+        "path": "scripts/Backup-DaMaoUserDbPackageV2.ps1",
+        "category": "package-v2-backup-entrypoint",
+        "sha256": "CDFF223C06D4D06696559BD35EC575E5E8A9D20BA75B6A41CF655849F3B072B4"
+      },
+      {
+        "path": "scripts/Restore-DaMaoUserDbPackageV2.ps1",
+        "category": "package-v2-restore-entrypoint",
+        "sha256": "D0D54600AC26B2CB130B85E09379E86920113F7E02D0E51C434A82CF7A705658"
+      },
+      {
+        "path": "scripts/DaMao.RimeLeversAdapter.cs",
+        "category": "native-backup-adapter",
+        "sha256": "642DA070C1A9C8AA3BF255D68716B6682AD0E8B6A6296223887C5899CE76AB46"
+      },
+      {
+        "path": "scripts/DaMao.RimeRestoreAdapter.cs",
+        "category": "native-restore-adapter",
+        "sha256": "AC0ACFB99ACC8F1337AA245FF07E571AFAA9B7C7D21C5CB19719D888930375C3"
+      },
+      {
+        "path": "tests/DaMao.PortabilityBaseline.ps1",
+        "category": "public-baseline-validator",
+        "sha256": "20D169BECA6DA8B5F0AD6E84CFC082343ABFBFBB651B83026055BBB756523DB6"
+      },
+      {
+        "path": "tests/Test-DaMaoUserDbPortabilityP0.ps1",
+        "category": "identity-and-integrity-tests",
+        "sha256": "0A15F2E55AA014640846C5B8DA5D0C2EBD83A118245405A6EB223635B22C8525"
+      },
+      {
+        "path": "tests/Test-DaMaoUserDbPortabilityP1.ps1",
+        "category": "snapshot-and-status-tests",
+        "sha256": "A2FB16D9CF117B8154022E75FD6A1C747B60329471D4C6A0DA9793CA4F0EDF7F"
+      },
+      {
+        "path": "tests/Test-DaMaoUserDbPortabilityP2.ps1",
+        "category": "backup-tests",
+        "sha256": "6DBA5755D0875A6E328AA6F377EFE3EF2CF69B175B401B4EC9FBF2253AC8ECC8"
+      },
+      {
+        "path": "tests/Test-DaMaoUserDbPortabilityP3.ps1",
+        "category": "restore-tests",
+        "sha256": "54F63FE1EF7E0B069887E7E135879F59B56275A97D40A11C594A9F6C2FE48918"
+      }
+    ]
+  }
+}

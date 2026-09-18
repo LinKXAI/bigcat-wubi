@@ -1,0 +1,93 @@
+# Rime schema
+# encoding: utf-8
+
+schema:
+  schema_id: damao_wubi_pinyin
+  name: "大猫输入法·五笔拼音"
+  version: "0.2.0-spike.1"
+  author:
+    - DaMao Input Method contributors
+  description: |
+    大猫输入法五笔拼音实验方案（默认不进入 UserDB portability 范围）。
+    五笔为主，以反引号显式进入拼音反查。
+  dependencies:
+    - pinyin_simp
+
+switches:
+  - name: ascii_mode
+    reset: 0
+    states: [ 中文, 西文 ]
+  - name: full_shape
+    states: [ 半角, 全角 ]
+  - name: ascii_punct
+    states: [ 中文标点, 西文标点 ]
+
+engine:
+  processors:
+    - ascii_composer
+    - recognizer
+    - key_binder
+    - speller
+    - punctuator
+    - selector
+    - navigator
+    - express_editor
+  segmentors:
+    - ascii_segmentor
+    - matcher
+    - abc_segmentor
+    - punct_segmentor
+    - fallback_segmentor
+  translators:
+    - punct_translator
+    - reverse_lookup_translator
+    - table_translator
+  filters:
+    - uniquifier
+
+speller:
+  alphabet: zyxwvutsrqponmlkjihgfedcba
+  delimiter: " ;'"
+  max_code_length: 4
+  auto_select: true
+
+translator:
+  dictionary: wubi86
+  user_dict: damao_wubi_pinyin
+  enable_user_dict: true
+  enable_sentence: false
+  enable_encoder: false
+  encode_commit_history: false
+  enable_completion: true
+
+abc_segmentor:
+  extra_tags:
+    - reverse_lookup
+
+reverse_lookup:
+  dictionary: pinyin_simp
+  prefix: "`"
+  tips: 〔拼音〕
+
+punctuator:
+  import_preset: default
+  digit_separators: "."
+
+key_binder:
+  import_preset: default
+  bindings:
+    __patch:
+      - key_bindings:/emacs_editing
+      - key_bindings:/move_by_word_with_tab
+      - key_bindings:/paging_with_minus_equal
+      - key_bindings:/numbered_mode_switch
+      - __append:
+          - { when: composing, accept: Return, send: Escape }
+          - { when: has_menu, accept: semicolon, send: 2 }
+          - { when: has_menu, accept: apostrophe, send: 3 }
+          - { when: has_menu, accept: period, send: period }
+
+recognizer:
+  import_preset: default
+  patterns:
+    reverse_lookup: "`[a-z]*$"
