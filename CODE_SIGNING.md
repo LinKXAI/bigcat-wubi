@@ -28,11 +28,11 @@ or claim authorship or ownership of Weasel, `rime-wubi`, or librime.
 
 ## Authors, Reviewers, and Approvers
 
-- **Authors:** maintainers and contributors who prepare source or build changes.
-- **Reviewers:** maintainers who review source, validation, dependency inventory,
-  build provenance, and release contents.
-- **Approvers:** designated maintainers who manually decide whether each future
-  signing request may proceed.
+## Project roles
+
+- Authors: [LinKXAI](https://github.com/LinKXAI)
+- Reviewers: [LinKXAI](https://github.com/LinKXAI)
+- Approvers: [LinKXAI](https://github.com/LinKXAI)
 
 Actual people must be assigned to these roles before applying to or configuring
 SignPath. Role overlap is allowed only if SignPath permits it and never removes
