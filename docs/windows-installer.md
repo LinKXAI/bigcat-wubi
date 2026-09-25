@@ -1,3 +1,15 @@
+> Final DEV3: READY FOR COMMIT / READY FOR RELEASE CANDIDATE.
+> Automatic acceptance and minimum human Sandbox rechecks 3/3 PASS;
+> SHARED-POLICY-01 CLOSED: [DEV3 acceptance](quanpin-dev3-acceptance.md).
+> [Commit / PR / RC preparation](quanpin-release-preparation.md) records the
+> candidate, submission files and remaining non-blocking checks.
+> Historical DEV2 results: [acceptance archive](quanpin-release-acceptance.md).
+> The historical sections below do not replace those dated records.
+
+> Candidate full-pinyin integration is documented in [Quanpin candidate](quanpin-candidate.md).
+> Normal Setup and redeploy now enter Install-DaMaoWithQuanpin.ps1 before the
+> existing Wubi installer. Personal learning databases are retained on uninstall.
+
 # Windows installer and ownership-aware uninstall
 
 ## Architecture
@@ -8,6 +20,7 @@ GitHub, a browser, or a package manager.
 
 ```text
 BigCatWubi-Setup.exe
+  -> PrepareToInstall stages four read-only guard inputs and rejects conflicting shared full-pinyin policy
   -> installs BigCat scripts, schema, branding, licenses, and pinned rime-wubi files
   -> runs Bootstrap-Weasel.ps1 -ProbeOnly
      -> Usable: do not extract or run the embedded Weasel installer
@@ -15,17 +28,19 @@ BigCatWubi-Setup.exe
      -> Unusable: fail closed without replacing the existing installation
   -> validates the bundled rime-wubi source
   -> captures whether %APPDATA%\Rime is absent or has zero entries
+  -> rechecks shared policy before writing immutable Weasel provenance
   -> classifies and persists immutable Weasel provenance before deployment
   -> if needed, verifies and runs the direct Weasel installer process
   -> bounded Weasel rediscovery
-  -> calls Install-DaMao.ps1 exactly once with the local Wubi source and Weasel root
+  -> calls Install-DaMaoWithQuanpin.ps1 with the local Wubi source and Weasel root
+     -> existing Install-DaMao.ps1 -SkipDeploy, combined configuration, one deployment
 ```
 
 The install root is `%LOCALAPPDATA%\Programs\BigCatWubi`. Inno Setup remains
 a thin orchestration layer and does not edit Rime YAML, registry settings,
-UserDB data, or Weasel program files. `Install-DaMao.ps1` remains authoritative
-for configuration backup, semantic merge, idempotence, deployment, and
-verification. `DaMao.InstallerState.ps1` owns the provenance contract and
+UserDB data, or Weasel program files. `Install-DaMaoWithQuanpin.ps1` coordinates the dual-schema transaction, merge,
+deployment and verification. It reuses `Install-DaMao.ps1 -SkipDeploy` for the
+existing Wubi installation; the pure-Wubi core remains unchanged. `DaMao.InstallerState.ps1` owns the provenance contract and
 `Uninstall-BigCat.ps1` owns the targeted inverse mutation, exact artifact
 cleanup, retained-Weasel redeploy, and registered Weasel uninstaller boundary.
 
@@ -249,8 +264,6 @@ The exact unconditional Rime cleanup set is:
 damao_wubi.schema.yaml
 damao_wubi/branding/bigcat-ime.ico
 build/damao_wubi.schema.yaml
-damao_wubi.userdb
-damao_wubi.userdb.kct
 default.custom.yaml -> only schema_list entries whose schema is exactly damao_wubi
 ```
 
@@ -258,7 +271,8 @@ The icon directories are removed only after they are empty. The shared
 `wubi86.dict.yaml`, `LICENSE.rime-wubi.txt`, and `rime-wubi.source.json` are
 conditional on the recorded creation/hash/dependency checks above.
 
-Deliberately preserved data includes `sync`, timestamped configuration backups,
+Deliberately preserved data includes `damao_wubi.userdb`,
+`damao_wubi.userdb.kct`, all pinyin learning data, `sync`, timestamped configuration backups,
 `damao_wubi.custom.yaml` (user-authored schema customization), all other schema
 and UserDB identities, unrelated dictionaries and custom files, and the Rime
 root itself. No cleanup path uses a wildcard, deletes `%APPDATA%\Rime`, or
@@ -266,9 +280,11 @@ deletes a file merely because its name contains `damao`.
 
 ## Packaged BigCat payload
 
-The installer packages only the five BigCat install/state/uninstall scripts, formal
-schema, product icon/license, dependency lock, third-party provenance/license files, the four
-pinned rime-wubi source files, and the temporary embedded Weasel installer.
+The installer packages the BigCat install/state/uninstall scripts including the
+full-pinyin transaction wrapper, formal Wubi schema and independent quanpin
+policy, product icons/licenses, dependency locks, third-party provenance and
+license files, pinned rime-wubi and full-pinyin resources, and the temporary
+embedded Weasel installer.
 It does not package tests, Git metadata, diagnostic schemas, development
 fixtures, or any user-generated Rime state.
 

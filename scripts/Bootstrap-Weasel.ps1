@@ -5,7 +5,8 @@ param(
     [string]$BundledWubiSourcePath,
     [string]$InstallerStatePath,
     [string]$ExistingWeaselOrigin,
-    [switch]$LegacyInstallPresent
+    [switch]$LegacyInstallPresent,
+    [ValidateSet('Wubi','Pinyin')][string]$DefaultEntry = 'Wubi'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -367,9 +368,18 @@ function Get-DaMaoWeaselProbeExitCode {
     }
 }
 
+function Set-DaMaoPreflightedInstallerProvenance {
+    param([string]$Path, [string]$WeaselOrigin, [string]$RimeUserDir, [string]$WeaselRoot)
+    . (Join-Path $PSScriptRoot 'DaMao.Quanpin.ps1')
+    Assert-DaMaoQuanpinSharedPolicy -PolicyPath (Join-Path $PSScriptRoot '..\schemas\luna_quanpin.custom.yaml') -WeaselRoot $WeaselRoot
+    if(-not [string]::IsNullOrWhiteSpace($Path)){
+        Set-DaMaoInstallerProvenance -Path $Path -WeaselOrigin $WeaselOrigin -RimeUserDir $RimeUserDir
+    }
+}
+
 function Invoke-DaMaoWeaselBootstrapEntryPoint {
     . (Join-Path $PSScriptRoot 'DaMao.Common.ps1')
-    $installScript = Join-Path $PSScriptRoot 'Install-DaMao.ps1'
+    $installScript = Join-Path $PSScriptRoot 'Install-DaMaoWithQuanpin.ps1'
 
     Assert-DaMaoBundledWubiSource -SourcePath $BundledWubiSourcePath | Out-Null
     $rimeUserDir = Get-DaMaoRimeUserDir
@@ -393,6 +403,7 @@ function Invoke-DaMaoWeaselBootstrapEntryPoint {
             InstallWubiDependency = $true
             WubiSourcePath = $BundledWubiSourcePath
             WeaselRoot = $weaselRoot
+            DefaultEntry = $DefaultEntry
         }
         if ($initializeFreshRimeState) {
             $installParameters.InitializeFreshRimeState = $true
@@ -404,10 +415,8 @@ function Invoke-DaMaoWeaselBootstrapEntryPoint {
     }
     $recordOrigin = {
         param($origin, $weaselRoot)
-        if (-not [string]::IsNullOrWhiteSpace($InstallerStatePath)) {
-            Set-DaMaoInstallerProvenance -Path $InstallerStatePath `
-                -WeaselOrigin $origin -RimeUserDir $rimeUserDir
-        }
+        Set-DaMaoPreflightedInstallerProvenance -Path $InstallerStatePath `
+            -WeaselOrigin $origin -RimeUserDir $rimeUserDir -WeaselRoot $weaselRoot
     }
 
     Invoke-DaMaoWeaselBootstrapFlow -DiscoverWeasel $discover -StageInstaller $stage `

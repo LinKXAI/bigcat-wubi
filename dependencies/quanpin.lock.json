@@ -1,0 +1,113 @@
+{
+  "format_version": 1,
+  "source": {
+    "package": "Weasel 0.17.4",
+    "asset": "https://github.com/rime/weasel/releases/download/0.17.4/weasel-0.17.4.0-installer.exe",
+    "sha256": "CF509534A8F5F8AF9C98ED7CBB8F135439F145A8CBE7E50EDE42BB5B5AB45C29",
+    "extraction": "7-Zip 26.01; data/ source resources; never Rime/build"
+  },
+  "files": [
+    {
+      "path": "luna_quanpin.schema.yaml",
+      "size": 420,
+      "sha256": "7F48D43A55791A848E0D95F3A43326B9A7F13FEE9D7934E0BF7B1354B3A096CA",
+      "archive_path": "data/luna_quanpin.schema.yaml"
+    },
+    {
+      "path": "luna_pinyin.schema.yaml",
+      "size": 2184,
+      "sha256": "A80C89BD16D31842BACBEE6B17B9BA1A4F5FD862B7DB31049A229AED8628299E",
+      "archive_path": "data/luna_pinyin.schema.yaml"
+    },
+    {
+      "path": "luna_pinyin.dict.yaml",
+      "size": 962079,
+      "sha256": "DC15421F70E80B5D9DC0339DB79856B671A58F8E6779C1B5B7592B83A57B0817",
+      "archive_path": "data/luna_pinyin.dict.yaml"
+    },
+    {
+      "path": "stroke.schema.yaml",
+      "size": 3156,
+      "sha256": "F541D4C7450370B2652AE5E4190396803504EDC987F74F16718458811312F303",
+      "archive_path": "data/stroke.schema.yaml"
+    },
+    {
+      "path": "stroke.dict.yaml",
+      "size": 2330785,
+      "sha256": "0FE1C1C0673F3564F16DEB1F659A75F3AD6A43E5308165DCCFB63FD94864F631",
+      "archive_path": "data/stroke.dict.yaml"
+    },
+    {
+      "path": "pinyin.yaml",
+      "size": 4965,
+      "sha256": "F2D291166946A848FD88E541844567415F1ED3D9C5A7477757B88AEB3A69C0CA",
+      "archive_path": "data/pinyin.yaml"
+    },
+    {
+      "path": "default.yaml",
+      "size": 1431,
+      "sha256": "5A438C92AA7DDD749644C7C799967074634D41ACE924859BE2A371F29565C892",
+      "archive_path": "data/default.yaml"
+    },
+    {
+      "path": "key_bindings.yaml",
+      "size": 3021,
+      "sha256": "19C52D80A4BF043C16C49FDFEB58CFA4D7A9F2B94BD18C79FF2485BD7627DB5F",
+      "archive_path": "data/key_bindings.yaml"
+    },
+    {
+      "path": "punctuation.yaml",
+      "size": 2212,
+      "sha256": "C9E5147FDA24D1A13085075DF5A2E73DEECB643069BE3751C6D4D793CEB2DE5B",
+      "archive_path": "data/punctuation.yaml"
+    },
+    {
+      "path": "symbols.yaml",
+      "size": 28729,
+      "sha256": "D3C1823F0E3BAE5FB2DAC338F4863A0D7164436D1EE132727FF5C4687F53601A",
+      "archive_path": "data/symbols.yaml"
+    },
+    {
+      "path": "essay.txt",
+      "size": 6330573,
+      "sha256": "AE37983A4216145A6854375F21016358470C5DCF5AE9F6A54C29801E70B4D824",
+      "archive_path": "data/essay.txt"
+    },
+    {
+      "path": "opencc/t2s.json",
+      "size": 428,
+      "sha256": "EBE32A6766BFBAEA1869F82368F54A8FC6C977A235E8A896B618714872B5DF09",
+      "archive_path": "data/opencc/t2s.json"
+    },
+    {
+      "path": "opencc/TSCharacters.ocd2",
+      "size": 46126,
+      "sha256": "85291E0173E972BBCA58C848FB90B3BB41C79674CB61A75645E01BD884AD5927",
+      "archive_path": "data/opencc/TSCharacters.ocd2"
+    },
+    {
+      "path": "opencc/TSPhrases.ocd2",
+      "size": 9776,
+      "sha256": "EDAFC46F5C3ECA61A754C78E47117E7C73995CACD6C99AADCB8A219D7AE3E53D",
+      "archive_path": "data/opencc/TSPhrases.ocd2"
+    }
+  ],
+  "notices": [
+    {
+      "path": "LICENSE.Apache-2.0.txt",
+      "sha256": "AAC73B3148F6D1D7111DBCA32099F68D26C644C6813AE1E4F05F6579AA2663FE"
+    },
+    {
+      "path": "LICENSE.GPL-3.0.txt",
+      "sha256": "8CEB4B9EE5ADEDDE47B31E975C1D90C73AD27B6B165A1DCD80C7C545EB65B903"
+    },
+    {
+      "path": "LICENSE.LGPL-3.0.txt",
+      "sha256": "DA7EABB7BAFDF7D3AE5E9F223AA5BDC1EECE45AC569DC21B3B037520B4464768"
+    },
+    {
+      "path": "UPSTREAM.md",
+      "sha256": "3AD06398B17681256F13D854E0DB144AF61E355F0C463C4D6FDF208FEE162A0B"
+    }
+  ]
+}

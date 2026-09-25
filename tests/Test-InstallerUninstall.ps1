@@ -144,6 +144,7 @@ other: keep
         Write-TestText -Path (Join-Path $cleanupRime $relativePath) -Content 'bigcat'
     }
     foreach ($relativePath in @(
+        'damao_wubi.userdb.kct', 'damao_wubi.userdb\CURRENT',
         'luna.schema.yaml', 'luna.userdb\CURRENT', 'sync\machine\damao_wubi.userdb.txt',
         'backup\damao-ime-config-20300101\default.custom.yaml',
         'damao_wubi.custom.yaml', 'user.yaml', 'unrelated.dict.yaml')) {
@@ -154,7 +155,7 @@ other: keep
     Assert-UninstallInvariant ($cleanupResult.Failures.Count -eq 0) 'Exact BigCat cleanup returned unexpected failures.'
     foreach ($relativePath in @(
         'damao_wubi.schema.yaml', 'damao_wubi\branding\bigcat-ime.ico',
-        'build\damao_wubi.schema.yaml', 'damao_wubi.userdb.kct', 'damao_wubi.userdb')) {
+        'build\damao_wubi.schema.yaml')) {
         Assert-UninstallInvariant (-not (Test-Path -LiteralPath (Join-Path $cleanupRime $relativePath))) `
             "BigCat-owned artifact survived cleanup: $relativePath"
     }
@@ -163,6 +164,7 @@ other: keep
             "Hash-proven BigCat-created shared artifact survived cleanup: $relativePath"
     }
     foreach ($relativePath in @(
+        'damao_wubi.userdb.kct', 'damao_wubi.userdb\CURRENT',
         'luna.schema.yaml', 'luna.userdb\CURRENT', 'sync\machine\damao_wubi.userdb.txt',
         'backup\damao-ime-config-20300101\default.custom.yaml',
         'damao_wubi.custom.yaml', 'user.yaml', 'unrelated.dict.yaml')) {
