@@ -69,7 +69,7 @@ foreach ($relativePath in $requiredFiles) {
 }
 
 $trackedFiles = Get-ChildItem -LiteralPath $repoRoot -Recurse -File |
-    Where-Object { $_.FullName -notmatch '[\\/]\.git[\\/]' }
+    Where-Object { $_.FullName -notmatch '[\\/](?:\.git|dist)[\\/]' }
 $textExtensions = @('.md', '.yaml', '.yml', '.ps1', '.txt', '.iss')
 $extensionlessTextFiles = @('.editorconfig', '.gitattributes', '.gitignore', 'LICENSE', 'VERSION')
 $textFiles = $trackedFiles | Where-Object {
@@ -288,7 +288,7 @@ if ($wubiConfig -match '(?m)^\s*-\s*lua_processor(?:@\S+)?\s*$') {
 $forbiddenNames = @('*.userdb', '*.userdb.kct', '*.userdb.txt', 'installation.yaml', 'user.yaml')
 foreach ($pattern in $forbiddenNames) {
     $matches = Get-ChildItem -LiteralPath $repoRoot -Recurse -Force -Filter $pattern |
-        Where-Object { $_.FullName -notmatch '[\\/]\.git[\\/]' }
+        Where-Object { $_.FullName -notmatch '[\\/](?:\.git|dist)[\\/]' }
     foreach ($match in $matches) {
         $failures.Add("User data must not be committed: $($match.FullName.Substring($repoRoot.Length + 1))")
     }

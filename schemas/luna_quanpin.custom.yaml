@@ -1,0 +1,21 @@
+# BigCat: independent full-pinyin default; base schemas remain unchanged.
+patch:
+  switches:
+      - name: ascii_mode
+        reset: 0
+        states: [ 中文, 西文 ]
+      - name: full_shape
+        states: [ 半角, 全角 ]
+      - name: simplification
+        reset: 1
+        states: [ 漢字, 汉字 ]
+      - name: ascii_punct
+        states: [ 。，, ．， ]
+  schema/icon: luna_quanpin/branding/bigcat-ime.ico
+  schema/ascii_icon: luna_quanpin/branding/bigcat-ime.ico
+  # Inherit effective defaults, changing only this schema's two Shift actions.
+  ascii_composer:
+    __include: default:/ascii_composer
+    __patch:
+      switch_key/Shift_L: commit_code
+      switch_key/Shift_R: commit_code

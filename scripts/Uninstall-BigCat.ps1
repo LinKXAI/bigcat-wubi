@@ -36,13 +36,13 @@ function Get-DaMaoBigCatOwnedArtifactPlan {
         Files = @(
             'damao_wubi.schema.yaml',
             'damao_wubi\branding\bigcat-ime.ico',
-            'build\damao_wubi.schema.yaml',
-            'damao_wubi.userdb.kct'
+            'build\damao_wubi.schema.yaml'
         )
-        Directories = @('damao_wubi.userdb')
+        Directories = @()
         EmptyDirectories = @('damao_wubi\branding', 'damao_wubi')
         SharedFiles = @($script:DaMaoRimeOwnershipPaths.Values)
         Preserved = @(
+            'damao_wubi.userdb', 'damao_wubi.userdb.kct', 'all pinyin learning data',
             'sync',
             'backup',
             'damao_wubi.custom.yaml',

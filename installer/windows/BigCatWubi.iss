@@ -1,4 +1,10 @@
 #include "VERSION"
+#ifdef QuanpinCandidate
+  #undef MyAppVersion
+  #undef MyAppNumericVersion
+  #define MyAppVersion "0.9.1 Dev 3 - Quanpin candidate"
+  #define MyAppNumericVersion "0.9.1.3"
+#endif
 
 #define MyAppName "大猫五笔"
 #define MyAppEnglishName "BigCat Wubi"
@@ -36,6 +42,7 @@ WelcomeFontName=Microsoft YaHei UI
 Name: "desktopicon"; Description: "创建“大猫五笔 - 重新部署”桌面快捷方式"; GroupDescription: "附加快捷方式："; Flags: unchecked
 
 [Files]
+Source: "..\..\scripts\Check-QuanpinSharedPolicy.ps1"; DestDir: "{app}\scripts"; Flags: ignoreversion
 ; Keep the large temporary payload first for efficient solid-stream extraction.
 Source: "..\..\third_party\weasel\0.17.4\weasel-0.17.4.0-installer.exe"; Flags: dontcopy noencryption
 Source: "..\..\scripts\Install-DaMao.ps1"; DestDir: "{app}\scripts"; Flags: ignoreversion
@@ -56,15 +63,41 @@ Source: "..\..\third_party\rime\rime-wubi\UPSTREAM.md"; DestDir: "{app}\third_pa
 Source: "..\..\dependencies\windows-installer-v2.lock.json"; DestDir: "{app}\dependencies"; Flags: ignoreversion
 Source: "..\..\LICENSE"; DestDir: "{app}"; Flags: ignoreversion
 
+Source: "..\..\scripts\DaMao.Quanpin.ps1"; DestDir: "{app}\scripts"; Flags: ignoreversion
+Source: "..\..\scripts\Install-DaMaoWithQuanpin.ps1"; DestDir: "{app}\scripts"; Flags: ignoreversion
+Source: "..\..\schemas\luna_quanpin.custom.yaml"; DestDir: "{app}\schemas"; Flags: ignoreversion
+Source: "..\..\dependencies\quanpin.lock.json"; DestDir: "{app}\dependencies"; Flags: ignoreversion
+Source: "..\..\third_party\rime\quanpin-weasel-0.17.4\default.yaml"; DestDir: "{app}\third_party\rime\quanpin-weasel-0.17.4"; Flags: ignoreversion
+Source: "..\..\third_party\rime\quanpin-weasel-0.17.4\essay.txt"; DestDir: "{app}\third_party\rime\quanpin-weasel-0.17.4"; Flags: ignoreversion
+Source: "..\..\third_party\rime\quanpin-weasel-0.17.4\key_bindings.yaml"; DestDir: "{app}\third_party\rime\quanpin-weasel-0.17.4"; Flags: ignoreversion
+Source: "..\..\third_party\rime\quanpin-weasel-0.17.4\LICENSE.GPL-3.0.txt"; DestDir: "{app}\third_party\rime\quanpin-weasel-0.17.4"; Flags: ignoreversion
+Source: "..\..\third_party\rime\quanpin-weasel-0.17.4\LICENSE.LGPL-3.0.txt"; DestDir: "{app}\third_party\rime\quanpin-weasel-0.17.4"; Flags: ignoreversion
+Source: "..\..\third_party\rime\quanpin-weasel-0.17.4\luna_pinyin.dict.yaml"; DestDir: "{app}\third_party\rime\quanpin-weasel-0.17.4"; Flags: ignoreversion
+Source: "..\..\third_party\rime\quanpin-weasel-0.17.4\luna_pinyin.schema.yaml"; DestDir: "{app}\third_party\rime\quanpin-weasel-0.17.4"; Flags: ignoreversion
+Source: "..\..\third_party\rime\quanpin-weasel-0.17.4\luna_quanpin.schema.yaml"; DestDir: "{app}\third_party\rime\quanpin-weasel-0.17.4"; Flags: ignoreversion
+Source: "..\..\third_party\rime\quanpin-weasel-0.17.4\opencc\t2s.json"; DestDir: "{app}\third_party\rime\quanpin-weasel-0.17.4\opencc"; Flags: ignoreversion
+Source: "..\..\third_party\rime\quanpin-weasel-0.17.4\opencc\TSCharacters.ocd2"; DestDir: "{app}\third_party\rime\quanpin-weasel-0.17.4\opencc"; Flags: ignoreversion
+Source: "..\..\third_party\rime\quanpin-weasel-0.17.4\opencc\TSPhrases.ocd2"; DestDir: "{app}\third_party\rime\quanpin-weasel-0.17.4\opencc"; Flags: ignoreversion
+Source: "..\..\third_party\rime\quanpin-weasel-0.17.4\pinyin.yaml"; DestDir: "{app}\third_party\rime\quanpin-weasel-0.17.4"; Flags: ignoreversion
+Source: "..\..\third_party\rime\quanpin-weasel-0.17.4\punctuation.yaml"; DestDir: "{app}\third_party\rime\quanpin-weasel-0.17.4"; Flags: ignoreversion
+Source: "..\..\third_party\rime\quanpin-weasel-0.17.4\stroke.dict.yaml"; DestDir: "{app}\third_party\rime\quanpin-weasel-0.17.4"; Flags: ignoreversion
+Source: "..\..\third_party\rime\quanpin-weasel-0.17.4\stroke.schema.yaml"; DestDir: "{app}\third_party\rime\quanpin-weasel-0.17.4"; Flags: ignoreversion
+Source: "..\..\third_party\rime\quanpin-weasel-0.17.4\symbols.yaml"; DestDir: "{app}\third_party\rime\quanpin-weasel-0.17.4"; Flags: ignoreversion
+Source: "..\..\third_party\rime\quanpin-weasel-0.17.4\UPSTREAM.md"; DestDir: "{app}\third_party\rime\quanpin-weasel-0.17.4"; Flags: ignoreversion
+
+Source: "..\..\third_party\rime\quanpin-weasel-0.17.4\LICENSE.Apache-2.0.txt"; DestDir: "{app}\third_party\rime\quanpin-weasel-0.17.4"; Flags: ignoreversion
+
 [Icons]
-Name: "{autoprograms}\{#MyAppName}\{#MyAppName} - 重新部署"; Filename: "{sys}\WindowsPowerShell\v1.0\powershell.exe"; Parameters: "-NoProfile -ExecutionPolicy Bypass -NoExit -File ""{app}\scripts\Install-DaMao.ps1"" -InstallWubiDependency -WubiSourcePath ""{app}\third_party\rime\rime-wubi"" -UserFacingRedeploy"; WorkingDir: "{app}"; IconFilename: "{app}\assets\branding\windows\bigcat.ico"; Comment: "通过大猫五笔安全安装脚本重新部署 Rime 配置"
-Name: "{autodesktop}\{#MyAppName} - 重新部署"; Filename: "{sys}\WindowsPowerShell\v1.0\powershell.exe"; Parameters: "-NoProfile -ExecutionPolicy Bypass -NoExit -File ""{app}\scripts\Install-DaMao.ps1"" -InstallWubiDependency -WubiSourcePath ""{app}\third_party\rime\rime-wubi"" -UserFacingRedeploy"; WorkingDir: "{app}"; IconFilename: "{app}\assets\branding\windows\bigcat.ico"; Comment: "通过大猫五笔安全安装脚本重新部署 Rime 配置"; Tasks: desktopicon
+Name: "{autoprograms}\{#MyAppName}\{#MyAppName} - 重新部署"; Filename: "{sys}\WindowsPowerShell\v1.0\powershell.exe"; Parameters: "-NoProfile -ExecutionPolicy Bypass -NoExit -File ""{app}\scripts\Install-DaMaoWithQuanpin.ps1"" -InstallWubiDependency -WubiSourcePath ""{app}\third_party\rime\rime-wubi"" -UserFacingRedeploy"; WorkingDir: "{app}"; IconFilename: "{app}\assets\branding\windows\bigcat.ico"; Comment: "通过大猫五笔安全安装脚本重新部署 Rime 配置"
+Name: "{autodesktop}\{#MyAppName} - 重新部署"; Filename: "{sys}\WindowsPowerShell\v1.0\powershell.exe"; Parameters: "-NoProfile -ExecutionPolicy Bypass -NoExit -File ""{app}\scripts\Install-DaMaoWithQuanpin.ps1"" -InstallWubiDependency -WubiSourcePath ""{app}\third_party\rime\rime-wubi"" -UserFacingRedeploy"; WorkingDir: "{app}"; IconFilename: "{app}\assets\branding\windows\bigcat.ico"; Comment: "通过大猫五笔安全安装脚本重新部署 Rime 配置"; Tasks: desktopicon
 
 [UninstallDelete]
 Type: files; Name: "{app}\installer-state.ini"
 
 [Code]
 var
+  EntryPage: TInputOptionWizardPage;
+  ExistingRimeEnvironment: Boolean;
   DeploymentFailed: Boolean;
   DeploymentExitCode: Integer;
   DeploymentFailureMessage: String;
@@ -105,10 +138,52 @@ begin
   Result := True;
 end;
 
+procedure InitializeWizard;
+var
+  UserDir: String;
+  RegistryUserDir: String;
+  Entry: TFindRec;
+begin
+  UserDir := ExpandConstant('{userappdata}\Rime');
+  if RegQueryStringValue(HKCU, 'Software\Rime\Weasel', 'RimeUserDir', RegistryUserDir) and
+    (Trim(RegistryUserDir) <> '') then UserDir := RegistryUserDir;
+  UserDir := ExpandFileName(UserDir);
+  ExistingRimeEnvironment := False;
+  if FindFirst(AddBackslash(UserDir) + '*', Entry) then
+  begin
+    try
+      repeat
+        if (Entry.Name <> '.') and (Entry.Name <> '..') then
+          ExistingRimeEnvironment := True;
+      until not FindNext(Entry);
+    finally
+      FindClose(Entry);
+    end;
+  end;
+  EntryPage := CreateInputOptionPage(wpSelectDir, '首次默认输入方案',
+    '同时安装五笔与全拼',
+    '全拼默认简体，可切换繁体。大猫五笔备份工具不包含拼音学习数据。', True, False);
+  if ExistingRimeEnvironment then
+  begin
+    EntryPage.Add('保留当前方案、已有方案顺序和用户设置');
+    EntryPage.Values[0] := True;
+    EntryPage.CheckListBox.Enabled := False;
+  end
+  else
+  begin
+    EntryPage.Add('五笔（默认）');
+    EntryPage.Add('拼音（全拼）');
+    EntryPage.Values[0] := True;
+  end;
+end;
+
 function GetBootstrapStateParameters: String;
 begin
   Result := ' -InstallerStatePath "' +
     ExpandConstant('{app}\installer-state.ini') + '"';
+  if not ExistingRimeEnvironment then
+    if EntryPage.Values[1] then
+      Result := Result + ' -DefaultEntry Pinyin';
   if IsTrustedWeaselOrigin(PreservedWeaselOrigin) then
     Result := Result + ' -ExistingWeaselOrigin "' + PreservedWeaselOrigin + '"';
   if PreviousBigCatInstall then
@@ -124,6 +199,28 @@ begin
 
   Log(Format('BigCat deployment did not complete (exit/error code %d).', [ExitCode]));
   MsgBox(FailureMessage, mbError, MB_OK);
+end;
+
+function PrepareToInstall(var NeedsRestart: Boolean): String;
+var
+  ResultCode: Integer;
+  Parameters: String;
+begin
+  Result := '';
+  { Stage only the read-only guard and policy before Setup writes application files. }
+  ExtractTemporaryFile('Check-QuanpinSharedPolicy.ps1');
+  ExtractTemporaryFile('DaMao.Common.ps1');
+  ExtractTemporaryFile('DaMao.Quanpin.ps1');
+  ExtractTemporaryFile('luna_quanpin.custom.yaml');
+  Parameters := '-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File "' +
+    ExpandConstant('{tmp}\Check-QuanpinSharedPolicy.ps1') + '" -PolicyPath "' +
+    ExpandConstant('{tmp}\luna_quanpin.custom.yaml') + '"';
+  if not Exec(ExpandConstant('{sys}\WindowsPowerShell\v1.0\powershell.exe'),
+    Parameters, ExpandConstant('{tmp}'), SW_HIDE, ewWaitUntilTerminated, ResultCode) then
+    Result := '无法执行全拼共享配置检查，安装未开始。'
+  else if ResultCode <> 0 then
+    Result := '[DM-PINYIN-SHARED-POLICY-CONFLICT] 检测到共享全拼定制或无法安全检查。' +
+      '安装已停止，未修改现有配置。请核对小狼毫共享 data\luna_quanpin.custom.yaml；不要直接删除个人定制。';
 end;
 
 procedure RunBigCatDeployment;
@@ -291,7 +388,7 @@ begin
     PromptLabel.Width := ScaleX(480);
     PromptLabel.AutoSize := False;
     PromptLabel.WordWrap := True;
-    PromptLabel.Caption := '大猫五笔自身的程序、输入方案和专属学习数据将被移除。';
+    PromptLabel.Caption := '移除大猫五笔程序及五笔入口；保留个人学习数据、全拼和公共依赖。';
 
     WeaselCheckBox := TNewCheckBox.Create(OptionsForm);
     WeaselCheckBox.Parent := OptionsForm;

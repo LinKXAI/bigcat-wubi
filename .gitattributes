@@ -7,3 +7,19 @@
 *.gif binary
 *.ico binary
 *.exe binary
+
+# Preserve exact locked upstream bytes and immutable DEV1 policy identity.
+# Treat their preserved CRLF terminators as line endings during whitespace checks.
+third_party/rime/quanpin-weasel-0.17.4/default.yaml -text whitespace=cr-at-eol
+third_party/rime/quanpin-weasel-0.17.4/essay.txt -text whitespace=cr-at-eol
+third_party/rime/quanpin-weasel-0.17.4/key_bindings.yaml -text whitespace=cr-at-eol
+third_party/rime/quanpin-weasel-0.17.4/luna_pinyin.dict.yaml -text whitespace=cr-at-eol
+third_party/rime/quanpin-weasel-0.17.4/luna_pinyin.schema.yaml -text whitespace=cr-at-eol
+third_party/rime/quanpin-weasel-0.17.4/luna_quanpin.schema.yaml -text whitespace=cr-at-eol
+third_party/rime/quanpin-weasel-0.17.4/opencc/t2s.json -text whitespace=cr-at-eol
+third_party/rime/quanpin-weasel-0.17.4/pinyin.yaml -text whitespace=cr-at-eol
+third_party/rime/quanpin-weasel-0.17.4/punctuation.yaml -text whitespace=cr-at-eol
+third_party/rime/quanpin-weasel-0.17.4/stroke.dict.yaml -text whitespace=cr-at-eol
+third_party/rime/quanpin-weasel-0.17.4/stroke.schema.yaml -text whitespace=cr-at-eol
+third_party/rime/quanpin-weasel-0.17.4/symbols.yaml -text whitespace=cr-at-eol
+tests/fixtures/quanpin-dev1.custom.yaml -text whitespace=cr-at-eol

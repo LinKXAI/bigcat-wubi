@@ -174,7 +174,7 @@ if ((Test-Path -LiteralPath $installerPath -PathType Leaf) -and
     Assert-InstallerInvariant ($installer -match '(?m)^Name: "desktopicon";.*Flags: unchecked\s*$') `
         'The Desktop shortcut task must be optional and unchecked by default.'
     Assert-InstallerInvariant ($installer -match '-WindowStyle Hidden -File' -and
-        [regex]::Matches($installer, '-WindowStyle Hidden').Count -eq 4 -and
+        [regex]::Matches($installer, '-WindowStyle Hidden').Count -eq 5 -and
         $installer -match '\{app\}\\scripts\\Bootstrap-Weasel\.ps1' -and
         $bootstrap -match '& \$installScript @installParameters' -and
         $bootstrap -match '\$installParameters\.InitializeFreshRimeState\s*=\s*\$true') `
@@ -214,16 +214,23 @@ if ((Test-Path -LiteralPath $installerPath -PathType Leaf) -and
         $installer -match '(?s)if ResultCode <> 0 then.*?RecordDeploymentFailure' -and
         $installer -notmatch '(?s)if ResultCode = 0 then.*?RecordDeploymentFailure') `
         'The successful post-install orchestration point must remain unchanged.'
-    Assert-InstallerInvariant ($installer -notmatch '(?im)^\[Registry\]|Rime\\Weasel|default\.custom\.yaml') `
+    Assert-InstallerInvariant ($installer -notmatch '(?im)^\[Registry\]|RegWrite|default\.custom\.yaml') `
         'The Inno layer must not edit Rime registry/configuration state directly.'
     Assert-InstallerInvariant ($installer -notmatch '(?i)WeaselServer\.exe|WeaselDeployer\.exe|rime\.dll') `
         'The Inno source directly references a third-party Weasel/Rime binary.'
     Assert-InstallerInvariant ($installer -match '(?m)^Source: "\.\.\\\.\.\\third_party\\weasel\\0\.17\.4\\weasel-0\.17\.4\.0-installer\.exe"; Flags: dontcopy noencryption\s*$') `
         'The official Weasel installer must be embedded as an extraction-only payload.'
-    Assert-InstallerInvariant ([regex]::Matches($installer, 'ExtractTemporaryFile\(').Count -eq 1 -and
+    Assert-InstallerInvariant ([regex]::Matches($installer, "ExtractTemporaryFile\('\{#MyBundledWeaselInstaller\}'\)").Count -eq 1 -and
         $installer -match '(?s)10:\s+begin.*?ExtractTemporaryFile\(' -and
         $installer -match '(?s)0:\s+begin.*?bundled Weasel installer will not be extracted or run.*?end;\s+10:') `
         'The bundled Weasel installer must be extracted only after an Absent probe result.'
+    $stagedGuardFiles=@('Check-QuanpinSharedPolicy.ps1','DaMao.Common.ps1','DaMao.Quanpin.ps1','luna_quanpin.custom.yaml')
+    foreach($guardFile in $stagedGuardFiles){
+        Assert-InstallerInvariant ($installer.Contains("ExtractTemporaryFile('$guardFile')")) "Pre-copy guard stages $guardFile."
+    }
+    Assert-InstallerInvariant ([regex]::Matches($installer, 'ExtractTemporaryFile\(').Count -eq 5 -and
+        $installer -match '(?s)function PrepareToInstall.*?ResultCode <> 0.*?end;') `
+        'Only the four read-only guard inputs and conditionally extracted Weasel installer are staged.'
     Assert-InstallerInvariant ($installer -match '" -ProbeOnly''' -and
         $installer -match '(?s)case ResultCode of\s+0:.*?10:.*?25:') `
         'Inno must classify Weasel before choosing whether to extract the bundled installer.'
@@ -270,6 +277,7 @@ if ((Test-Path -LiteralPath $installerPath -PathType Leaf) -and
     }
 
     $expectedSources = @(
+        'scripts\Check-QuanpinSharedPolicy.ps1',
         'scripts\Install-DaMao.ps1',
         'scripts\DaMao.Common.ps1',
         'scripts\DaMao.InstallerState.ps1',
@@ -287,10 +295,41 @@ if ((Test-Path -LiteralPath $installerPath -PathType Leaf) -and
         'third_party\rime\rime-wubi\wubi86.schema.yaml',
         'third_party\rime\rime-wubi\UPSTREAM.md',
         'dependencies\windows-installer-v2.lock.json',
+        'scripts\DaMao.Quanpin.ps1',
+        'scripts\Install-DaMaoWithQuanpin.ps1',
+        'schemas\luna_quanpin.custom.yaml',
+        'dependencies\quanpin.lock.json',
+        'third_party\rime\quanpin-weasel-0.17.4\default.yaml',
+        'third_party\rime\quanpin-weasel-0.17.4\essay.txt',
+        'third_party\rime\quanpin-weasel-0.17.4\key_bindings.yaml',
+        'third_party\rime\quanpin-weasel-0.17.4\LICENSE.GPL-3.0.txt',
+        'third_party\rime\quanpin-weasel-0.17.4\LICENSE.LGPL-3.0.txt',
+        'third_party\rime\quanpin-weasel-0.17.4\luna_pinyin.dict.yaml',
+        'third_party\rime\quanpin-weasel-0.17.4\luna_pinyin.schema.yaml',
+        'third_party\rime\quanpin-weasel-0.17.4\luna_quanpin.schema.yaml',
+        'third_party\rime\quanpin-weasel-0.17.4\opencc\t2s.json',
+        'third_party\rime\quanpin-weasel-0.17.4\opencc\TSCharacters.ocd2',
+        'third_party\rime\quanpin-weasel-0.17.4\opencc\TSPhrases.ocd2',
+        'third_party\rime\quanpin-weasel-0.17.4\pinyin.yaml',
+        'third_party\rime\quanpin-weasel-0.17.4\punctuation.yaml',
+        'third_party\rime\quanpin-weasel-0.17.4\stroke.dict.yaml',
+        'third_party\rime\quanpin-weasel-0.17.4\stroke.schema.yaml',
+        'third_party\rime\quanpin-weasel-0.17.4\symbols.yaml',
+        'third_party\rime\quanpin-weasel-0.17.4\UPSTREAM.md',
+        'third_party\rime\quanpin-weasel-0.17.4\LICENSE.Apache-2.0.txt',
         'LICENSE'
     ) | ForEach-Object { [System.IO.Path]::GetFullPath((Join-Path $repoRoot $_)) }
     Assert-InstallerInvariant ((($actualSources | Sort-Object) -join "`n") -ceq (($expectedSources | Sort-Object) -join "`n")) `
         'The packaged payload is not the exact minimal approved file set.'
+
+    Assert-InstallerInvariant ($bootstrap -match "Install-DaMaoWithQuanpin\.ps1" -and
+        [regex]::Matches($installer,'\{app\}\\scripts\\Install-DaMaoWithQuanpin\.ps1').Count -eq 2) `
+        'Setup and both redeploy shortcuts must enter the dual-schema installer.'
+    Assert-InstallerInvariant ($installer -match 'EntryPage.Values\[0\] := True' -and
+        $installer -match 'EntryPage.CheckListBox.Enabled := False' -and $installer -match '-DefaultEntry Pinyin') `
+        'New-user default choice and existing-user preservation UI must be connected.'
+    Assert-InstallerInvariant ($buildScript -match 'Get-DaMaoQuanpinPlan' -and $buildScript -match 'source_files=\$sourceFiles') `
+        'Build must validate full-pinyin lock and record actual candidate source bytes.'
 
     $resolvedOutput = [System.IO.Path]::GetFullPath((Join-Path $installerDirectory '..\..\dist\windows'))
     $sourceDirectories = @('installer', 'scripts', 'schemas', 'assets', 'tests') |
