@@ -5,7 +5,7 @@ $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
 
 . (Join-Path (Split-Path -Parent $PSScriptRoot) 'scripts\DaMao.UserDbSnapshot.ps1')
-. (Join-Path $PSScriptRoot 'DaMao.PortabilityBaseline.ps1')
+. (Join-Path $PSScriptRoot 'DaMao.SuccessorBaseline.ps1')
 
 $script:assertionCount = 0
 $script:parserCaseCount = 0
@@ -27,14 +27,14 @@ function Assert-P1 {
 
 function Assert-PublicBaselineP1 {
     $repoRoot = Split-Path -Parent $PSScriptRoot
-    $contract = Get-DaMaoPublicBaseline -RepositoryRoot $repoRoot
+    $contract = Get-DaMaoAcceptanceBaseline -RepositoryRoot $repoRoot
     $files = @($contract.current_file_integrity.files)
     $failures = @(Test-DaMaoPublicBaselineManifest -RepositoryRoot $repoRoot -Files $files)
     if ($failures.Count -gt 0) {
         throw "[P1_BLOCKED_INPUT_CORE_DRIFT] Public baseline mismatch count: $($failures.Count)"
     }
     Assert-P1 ($files.Count -eq 17) 'DM-P1-FREEZE-01' `
-        'Public Baseline V1 must contain 17 pinned files.'
+        'Public Baseline V2 must contain 17 pinned files.'
     return 17
 }
 
@@ -678,7 +678,7 @@ try {
 
     $freezeEnd = Assert-PublicBaselineP1
     Assert-P1 ($freezeStart -eq 17 -and $freezeEnd -eq 17) 'DM-P1-FREEZE-02' `
-        'Public Baseline V1 did not remain 17/17 through P1 tests.'
+        'Public Baseline V2 did not remain 17/17 through P1 tests.'
 
     $fingerprintSource = 'parser=' + $script:parserCaseCount +
         ';detector=' + $script:detectorCaseCount +

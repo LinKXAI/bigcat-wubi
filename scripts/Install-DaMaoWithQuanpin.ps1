@@ -8,6 +8,7 @@ param(
 $ErrorActionPreference='Stop'
 . (Join-Path $PSScriptRoot 'DaMao.Common.ps1')
 . (Join-Path $PSScriptRoot 'DaMao.Quanpin.ps1')
+. (Join-Path $PSScriptRoot 'DaMao.SchemaUpgrade.ps1')
 $repoRoot=Split-Path $PSScriptRoot -Parent
 $user=Get-DaMaoRimeUserDir -Override $RimeUserDir
 $weasel=Get-DaMaoWeaselRoot -Override $WeaselRoot
@@ -22,7 +23,8 @@ if(-not(Test-Path -LiteralPath $basePath)){$basePath=Join-Path $weasel 'data\def
 if(-not(Test-Path -LiteralPath $basePath)){$basePath=Join-Path $repoRoot 'third_party\rime\quanpin-weasel-0.17.4\default.yaml'}
 $newContent=Get-DaMaoDualSchemaContent -Content $oldContent -Fresh $fresh -DefaultEntry $DefaultEntry -BaseContent ([IO.File]::ReadAllText($basePath))
 # All preflight conflicts are found before the first write. Never overwrite custom source resources.
-foreach($pair in @(@('damao_wubi.schema.yaml','schemas\damao_wubi.schema.yaml'),@('wubi86.dict.yaml','third_party\rime\rime-wubi\wubi86.dict.yaml'))){
+$schemaUpgrade=Get-DaMaoSchemaUpgradePlan -RepositoryRoot $repoRoot -RimeUserDir $user
+foreach($pair in ,@('wubi86.dict.yaml','third_party\rime\rime-wubi\wubi86.dict.yaml')){
     $target=Join-Path $user $pair[0];$source=Join-Path $repoRoot $pair[1]
     if((Test-Path -LiteralPath $target) -and (Get-FileHash -LiteralPath $target).Hash -ne (Get-FileHash -LiteralPath $source).Hash){throw "[DM-RESOURCE-CONFLICT] Existing customized resource preserved: $($pair[0])"}
 }
@@ -49,6 +51,7 @@ foreach($target in @($targets|Select-Object -Unique)){
     $snapshots += [pscustomobject]@{Target=$target;Existed=$exists;Copy=$copy}
 }
 try {
+    Assert-DaMaoSchemaUpgradeUnchanged -Plan $schemaUpgrade
     foreach($item in $plan|Where-Object { $_.Action -in @('Add','UpgradeManagedPolicy') }){
         New-Item -ItemType Directory -Path (Split-Path $item.Target -Parent) -Force|Out-Null
         Copy-Item -LiteralPath $item.Source -Destination $item.Target
@@ -62,6 +65,7 @@ try {
     & (Join-Path $PSScriptRoot 'Install-DaMao.ps1') @installArgs | Out-Null
     # The dual-entry merger starts from the original configuration, not legacy normalization.
     Write-DaMaoUtf8File -Path $defaultPath -Content $newContent
+    $effectiveLearning=$null
     if(-not $SkipDeploy){
         # A custom fixture directory must never accidentally deploy the real Windows profile.
         if($RimeUserDir -and -not [string]::Equals($user,(Get-DaMaoRimeUserDir),[StringComparison]::OrdinalIgnoreCase)){
@@ -70,6 +74,7 @@ try {
         Invoke-DaMaoDeployer -WeaselRoot $weasel -Command '/deploy' -TimeoutSeconds 120
         Assert-DaMaoFormalDeployment -RimeUserDir $user
         Assert-DaMaoQuanpinDeployment -RimeUserDir $user
+        $effectiveLearning=Get-DaMaoEffectiveLearningStatus -RimeUserDir $user
     }
     $ledger=Join-Path $user 'damao_wubi\quanpin-install.json'
     $history=@()
@@ -82,7 +87,7 @@ try {
     foreach($item in $plan){if(@($history | ForEach-Object RelativePath) -notcontains $item.RelativePath){$history+=[pscustomobject]@{RelativePath=$item.RelativePath;Action=$item.Action;Kind=$item.Kind;SHA256=$item.SHA256}}}
     New-Item -ItemType Directory -Path (Split-Path $ledger -Parent) -Force|Out-Null
     [ordered]@{format_version=1;resources=$history;uninstall_policy='Preserve shared full-pinyin resources and all personal learning data';default_entry_applied=if($fresh){$DefaultEntry}else{'PreserveExisting'};pinyin_portability='Not covered by PureWubi backup/restore'}|ConvertTo-Json -Depth 6|Set-Content -LiteralPath $ledger -Encoding UTF8
-    [pscustomobject]@{Schemas=@('damao_wubi','luna_quanpin');Fresh=$fresh;DefaultEntry=if($fresh){$DefaultEntry}else{'PreserveExisting'};Deployed=(-not $SkipDeploy);Resources=$plan}
+    [pscustomobject]@{Schemas=@('damao_wubi','luna_quanpin');Fresh=$fresh;DefaultEntry=if($fresh){$DefaultEntry}else{'PreserveExisting'};Deployed=(-not $SkipDeploy);Resources=$plan;SchemaUpgradeAction=$schemaUpgrade.Action;LearningPatchStatus=$schemaUpgrade.PatchStatus;EffectiveLearning=$effectiveLearning}
 }
 catch {
     $original=$_

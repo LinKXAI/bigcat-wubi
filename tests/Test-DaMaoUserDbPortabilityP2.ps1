@@ -9,7 +9,7 @@ Set-StrictMode -Version Latest
 
 $repoRoot = Split-Path -Parent $PSScriptRoot
 . (Join-Path $repoRoot 'scripts\DaMao.UserDbPortabilityP2.ps1')
-. (Join-Path $PSScriptRoot 'DaMao.PortabilityBaseline.ps1')
+. (Join-Path $PSScriptRoot 'DaMao.SuccessorBaseline.ps1')
 
 $script:assertionCount = 0
 $script:nativeCaseCount = 0
@@ -128,12 +128,12 @@ function Write-SnapshotP2 {
 }
 
 function Assert-PublicBaselineP2 {
-    $contract = Get-DaMaoPublicBaseline -RepositoryRoot $repoRoot
+    $contract = Get-DaMaoAcceptanceBaseline -RepositoryRoot $repoRoot
     $files = @($contract.current_file_integrity.files)
     $failures = @(Test-DaMaoPublicBaselineManifest -RepositoryRoot $repoRoot -Files $files)
     Assert-P2 ($files.Count -eq 17 -and $failures.Count -eq 0) `
         'DM-P2-FREEZE' `
-        "Public Baseline V1 failed: $($failures -join '; ')"
+        "Public Baseline V2 failed: $($failures -join '; ')"
     return 17
 }
 
@@ -654,7 +654,7 @@ try {
     $freezeEnd = Assert-PublicBaselineP2
     Assert-PublicCiP2
     Assert-P2 ($freezeStart -eq 17 -and $freezeEnd -eq 17) 'DM-P2-FREEZE-END' `
-        'Public Baseline V1 changed during P2 tests.'
+        'Public Baseline V2 changed during P2 tests.'
 
     Write-Host ('DaMao UserDB Portability P2 tests passed. ' +
         "Assertions=$script:assertionCount NativeCases=$script:nativeCaseCount " +

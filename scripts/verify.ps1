@@ -3,6 +3,7 @@ param()
 
 $ErrorActionPreference = 'Stop'
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
+& (Join-Path $repoRoot 'tests/Invoke-DaMaoAcceptance.ps1')
 $failures = [System.Collections.Generic.List[string]]::new()
 
 $requiredFiles = @(
@@ -157,8 +158,9 @@ $requiredPatterns = @(
     @{ Name = 'maximum-code auto selection'; Text = $wubiConfig; Pattern = '(?m)^\s*auto_select:\s*true\s*$' },
     @{ Name = 'local user dictionary enabled'; Text = $wubiConfig; Pattern = '(?m)^\s*enable_user_dict:\s*true\s*$' },
     @{ Name = 'sentence generation disabled'; Text = $wubiConfig; Pattern = '(?m)^\s*enable_sentence:\s*false\s*$' },
-    @{ Name = 'phrase encoder disabled'; Text = $wubiConfig; Pattern = '(?m)^\s*enable_encoder:\s*false\s*$' },
-    @{ Name = 'commit history encoding disabled'; Text = $wubiConfig; Pattern = '(?m)^\s*encode_commit_history:\s*false\s*$' },
+    @{ Name = 'DEV4 phrase encoder enabled'; Text = $wubiConfig; Pattern = '(?m)^\s*enable_encoder:\s*true\s*$' },
+    @{ Name = 'DEV4 commit history encoding enabled'; Text = $wubiConfig; Pattern = '(?m)^\s*encode_commit_history:\s*true\s*$' },
+    @{ Name = 'DEV4 explicit four-character phrase limit'; Text = $wubiConfig; Pattern = '(?m)^\s*max_phrase_length:\s*4\s*$' },
     @{ Name = 'composing Return cancellation'; Text = $wubiConfig; Pattern = '(?m)^\s*-\s*\{\s*when:\s*composing,\s*accept:\s*Return,\s*send:\s*Escape\s*\}\s*$' },
     @{ Name = 'semicolon second-candidate shortcut'; Text = $wubiConfig; Pattern = '(?m)^\s*-\s*\{\s*when:\s*has_menu,\s*accept:\s*semicolon,\s*send:\s*2\s*\}\s*$' },
     @{ Name = 'apostrophe third-candidate shortcut'; Text = $wubiConfig; Pattern = '(?m)^\s*-\s*\{\s*when:\s*has_menu,\s*accept:\s*apostrophe,\s*send:\s*3\s*\}\s*$' },

@@ -2,8 +2,8 @@
 #ifdef QuanpinCandidate
   #undef MyAppVersion
   #undef MyAppNumericVersion
-  #define MyAppVersion "0.9.1 Dev 3 - Quanpin candidate"
-  #define MyAppNumericVersion "0.9.1.3"
+  #define MyAppVersion "0.9.1 Dev 4 - Native Wubi learning candidate"
+  #define MyAppNumericVersion "0.9.1.4"
 #endif
 
 #define MyAppName "大猫五笔"
@@ -47,6 +47,8 @@ Source: "..\..\scripts\Check-QuanpinSharedPolicy.ps1"; DestDir: "{app}\scripts";
 Source: "..\..\third_party\weasel\0.17.4\weasel-0.17.4.0-installer.exe"; Flags: dontcopy noencryption
 Source: "..\..\scripts\Install-DaMao.ps1"; DestDir: "{app}\scripts"; Flags: ignoreversion
 Source: "..\..\scripts\DaMao.Common.ps1"; DestDir: "{app}\scripts"; Flags: ignoreversion
+Source: "..\..\scripts\DaMao.SchemaUpgrade.ps1"; DestDir: "{app}\scripts"; Flags: ignoreversion
+Source: "..\..\contracts\wubi-schema-upgrade-v1.json"; DestDir: "{app}\contracts"; Flags: ignoreversion
 Source: "..\..\scripts\DaMao.InstallerState.ps1"; DestDir: "{app}\scripts"; Flags: ignoreversion
 Source: "..\..\scripts\Bootstrap-Weasel.ps1"; DestDir: "{app}\scripts"; Flags: ignoreversion
 Source: "..\..\scripts\Uninstall-BigCat.ps1"; DestDir: "{app}\scripts"; Flags: ignoreversion

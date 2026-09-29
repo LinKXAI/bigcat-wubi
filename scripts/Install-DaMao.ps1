@@ -97,6 +97,8 @@ if (-not [string]::IsNullOrWhiteSpace($InstallerStatePath)) {
 
 $resolvedUserDir = Get-DaMaoRimeUserDir -Override $RimeUserDir
 $resolvedWeaselRoot = Get-DaMaoWeaselRoot -Override $WeaselRoot
+. (Join-Path $PSScriptRoot 'DaMao.SchemaUpgrade.ps1')
+$schemaUpgrade = Get-DaMaoSchemaUpgradePlan -RepositoryRoot (Split-Path $PSScriptRoot -Parent) -RimeUserDir $resolvedUserDir
 $rimeOwnershipBefore = if (-not [string]::IsNullOrWhiteSpace($InstallerStatePath)) {
     Get-DaMaoRimeOwnershipSnapshot -RimeUserDir $resolvedUserDir
 }
@@ -109,12 +111,14 @@ if (Test-DaMaoPathWithin -Path $resolvedUserDir -Parent $resolvedWeaselRoot) {
 }
 
 if (-not (Test-Path -LiteralPath $resolvedUserDir -PathType Container)) {
+    Assert-DaMaoSchemaUpgradeUnchanged -Plan $schemaUpgrade
     if ($PSCmdlet.ShouldProcess($resolvedUserDir, 'Create Rime user directory')) {
         New-Item -ItemType Directory -Path $resolvedUserDir -Force | Out-Null
     }
 }
 
 $dependency = $null
+Assert-DaMaoSchemaUpgradeUnchanged -Plan $schemaUpgrade
 if (-not [string]::IsNullOrWhiteSpace($WubiSourcePath)) {
     if ($PSCmdlet.ShouldProcess($WubiSourcePath, 'Install wubi86 dictionary from local official rime-wubi source')) {
         $dependency = Install-DaMaoWubiFromSource -SourcePath $WubiSourcePath -RimeUserDir $resolvedUserDir -Method local
@@ -200,6 +204,7 @@ if (-not $iconNeedsCopy) {
     $iconNeedsCopy = $sourceIconHash -ne $targetIconHash
 }
 if ($iconNeedsCopy -and $PSCmdlet.ShouldProcess($targetSchemaIcon, 'Install BigCat schema icon')) {
+    Assert-DaMaoSchemaUpgradeUnchanged -Plan $schemaUpgrade
     $targetSchemaIconDirectory = Split-Path -Parent $targetSchemaIcon
     New-Item -ItemType Directory -Path $targetSchemaIconDirectory -Force | Out-Null
     Copy-Item -LiteralPath $sourceSchemaIcon -Destination $targetSchemaIcon -Force
@@ -214,6 +219,7 @@ if (Test-Path -LiteralPath $targetSchema -PathType Leaf) {
 
 $schemaWasCopied = $false
 if ($schemaNeedsCopy -and $PSCmdlet.ShouldProcess($targetSchema, 'Install DaMao Input Method schema')) {
+    Assert-DaMaoSchemaUpgradeUnchanged -Plan $schemaUpgrade
     if (Test-Path -LiteralPath $targetSchema -PathType Leaf) {
         New-Item -ItemType Directory -Path $backupDirectory -Force | Out-Null
         Copy-Item -LiteralPath $targetSchema -Destination (Join-Path $backupDirectory 'damao_wubi.schema.yaml') -Force
@@ -247,10 +253,12 @@ if (-not [string]::IsNullOrWhiteSpace($InstallerStatePath)) {
         -RimeUserDir $resolvedUserDir -ExistedBefore $rimeOwnershipBefore
 }
 
+$effectiveLearning = $null
 if (-not $SkipDeploy -and $PSCmdlet.ShouldProcess($resolvedWeaselRoot, 'Deploy Rime configuration')) {
     try {
         Invoke-DaMaoDeployer -WeaselRoot $resolvedWeaselRoot -Command '/deploy' -TimeoutSeconds 120
         Assert-DaMaoFormalDeployment -RimeUserDir $resolvedUserDir
+        $effectiveLearning = Get-DaMaoEffectiveLearningStatus -RimeUserDir $resolvedUserDir
     }
     catch {
         if ($_.Exception.Message -match '^\[DM-DEPLOY-(?:FAILED|TIMEOUT|BUSY)\]') {
@@ -262,6 +270,9 @@ if (-not $SkipDeploy -and $PSCmdlet.ShouldProcess($resolvedWeaselRoot, 'Deploy R
 
 [PSCustomObject]@{
     SchemaId = 'damao_wubi'
+    SchemaUpgradeAction = $schemaUpgrade.Action
+    LearningPatchStatus = $schemaUpgrade.PatchStatus
+    EffectiveLearning = $effectiveLearning
     RimeUserDir = $resolvedUserDir
     WeaselRoot = $resolvedWeaselRoot
     DictionaryDependency = $dependency

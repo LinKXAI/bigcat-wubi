@@ -1,0 +1,10 @@
+{
+  "format_version": 1,
+  "contract_id": "bigcat-wubi-dev3-to-dev4-schema",
+  "schema_id": "damao_wubi",
+  "user_dict": "damao_wubi",
+  "predecessor_commit": "97d0d659bbe808d11c0eefa3114ea929e0151e7f",
+  "predecessor_sha256": "651A0EA5EE42CABD39F4D38A2C580AA04D7C95604DAC2AE6D67547470536080C",
+  "successor_sha256": "A618CEAC52FA428C52172FE8042B3CC61F275C25445C74F32A57B5D054457CFA",
+  "automatic_userdb_migration": false
+}

@@ -12,7 +12,7 @@ permissions:
 jobs:
   verify:
     runs-on: windows-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - name: Check out repository
         uses: actions/checkout@v7
@@ -21,15 +21,27 @@ jobs:
       - name: Verify configuration and repository hygiene
         shell: pwsh
         run: ./scripts/verify.ps1
+      - name: Test explicit V2 successor contract
+        shell: pwsh
+        run: ./tests/Test-DaMaoSuccessorContract.ps1
+      - name: Test official schema predecessor contract
+        shell: powershell
+        run: ./tests/Test-DaMaoSchemaUpgrade.ps1
+      - name: Test Current V2 P0 with Windows PowerShell 5.1
+        shell: powershell
+        run: ./tests/Test-DaMaoUserDbPortabilityP0.ps1
+      - name: Test Current V2 P0 with PowerShell 7
+        shell: pwsh
+        run: ./tests/Test-DaMaoUserDbPortabilityP0.ps1
       - name: Test comprehensive harness
         shell: powershell
         run: ./tests/Run-DaMaoTests.ps1
       - name: Test Public Baseline V1 with Windows PowerShell 5.1
         shell: powershell
-        run: ./tests/Test-DaMaoUserDbPortabilityP0.ps1
+        run: ./tests/Invoke-DaMaoHistoricalV1.ps1 -HermeticOnly
       - name: Test Public Baseline V1 with PowerShell 7
         shell: pwsh
-        run: ./tests/Test-DaMaoUserDbPortabilityP0.ps1
+        run: ./tests/Invoke-DaMaoHistoricalV1.ps1 -HermeticOnly
       - name: Test P1 portability contract with Windows PowerShell 5.1
         shell: powershell
         run: ./tests/Test-DaMaoUserDbPortabilityP1.ps1

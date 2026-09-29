@@ -1,0 +1,99 @@
+{
+  "format_version": 1,
+  "contract_id": "bigcat-wubi-dev4-exact-transition",
+  "predecessor_commit": "97d0d659bbe808d11c0eefa3114ea929e0151e7f",
+  "predecessor_sha256": "C1456CAF3E1BF7EAD3B48D2BB0C21E0D49D1A340935BFEF6EF9EE45ACA02B0F1",
+  "changes": [
+    {
+      "path": "schemas/damao_wubi.schema.yaml",
+      "before_sha256": "651A0EA5EE42CABD39F4D38A2C580AA04D7C95604DAC2AE6D67547470536080C",
+      "after_sha256": "A618CEAC52FA428C52172FE8042B3CC61F275C25445C74F32A57B5D054457CFA",
+      "replacements": [
+        {
+          "before": "  enable_encoder: false\n  encode_commit_history: false\n",
+          "after": "  enable_encoder: true\n  encode_commit_history: true\n  max_phrase_length: 4\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/Test-DaMaoUserDbPortabilityP0.ps1",
+      "before_sha256": "0A15F2E55AA014640846C5B8DA5D0C2EBD83A118245405A6EB223635B22C8525",
+      "after_sha256": "176DC3C884671A94877BD7CDBE7BCAD043CB55C88D8CAC80335954202DF34E08",
+      "replacements": [
+        {
+          "before": "DaMao.PortabilityBaseline.ps1",
+          "after": "DaMao.SuccessorBaseline.ps1"
+        },
+        {
+          "before": "Get-DaMaoPublicBaseline",
+          "after": "Get-DaMaoAcceptanceBaseline"
+        },
+        {
+          "before": "Public Baseline V1",
+          "after": "Public Baseline V2"
+        }
+      ]
+    },
+    {
+      "path": "tests/Test-DaMaoUserDbPortabilityP1.ps1",
+      "before_sha256": "A2FB16D9CF117B8154022E75FD6A1C747B60329471D4C6A0DA9793CA4F0EDF7F",
+      "after_sha256": "782F23B8E0FF29DD571CFE9C1F34A87AEFB994B1701AEF29C53976D90DA4A1C9",
+      "replacements": [
+        {
+          "before": "DaMao.PortabilityBaseline.ps1",
+          "after": "DaMao.SuccessorBaseline.ps1"
+        },
+        {
+          "before": "Get-DaMaoPublicBaseline",
+          "after": "Get-DaMaoAcceptanceBaseline"
+        },
+        {
+          "before": "Public Baseline V1",
+          "after": "Public Baseline V2"
+        }
+      ]
+    },
+    {
+      "path": "tests/Test-DaMaoUserDbPortabilityP2.ps1",
+      "before_sha256": "6DBA5755D0875A6E328AA6F377EFE3EF2CF69B175B401B4EC9FBF2253AC8ECC8",
+      "after_sha256": "A9D96BB44CF9AB8A64A25402B6A3F7CA0F06030B1EBE40EB09B5DA56FD8CC454",
+      "replacements": [
+        {
+          "before": "DaMao.PortabilityBaseline.ps1",
+          "after": "DaMao.SuccessorBaseline.ps1"
+        },
+        {
+          "before": "Get-DaMaoPublicBaseline",
+          "after": "Get-DaMaoAcceptanceBaseline"
+        },
+        {
+          "before": "Public Baseline V1 failed:",
+          "after": "Public Baseline V2 failed:"
+        },
+        {
+          "before": "Public Baseline V1 changed during P2 tests.",
+          "after": "Public Baseline V2 changed during P2 tests."
+        }
+      ]
+    },
+    {
+      "path": "tests/Test-DaMaoUserDbPortabilityP3.ps1",
+      "before_sha256": "54F63FE1EF7E0B069887E7E135879F59B56275A97D40A11C594A9F6C2FE48918",
+      "after_sha256": "4187C00BA7EB769A124E621F7F6297973B5647CFB4CFBA6604DF062DDACAD695",
+      "replacements": [
+        {
+          "before": "DaMao.PortabilityBaseline.ps1",
+          "after": "DaMao.SuccessorBaseline.ps1"
+        },
+        {
+          "before": "Get-DaMaoPublicBaseline",
+          "after": "Get-DaMaoAcceptanceBaseline"
+        },
+        {
+          "before": "Public Baseline V1",
+          "after": "Public Baseline V2"
+        }
+      ]
+    }
+  ]
+}

@@ -637,8 +637,8 @@ public static class DaMaoFakeDeployer
         Assert-True -Condition $fullAlphaCacheBuild.Contains("$damaoDisplayName Diagnostic 04 - Full Alpha") -Message 'The runtime-generated full Alpha diagnostic did not deploy with its diagnostic name.'
         Assert-True -Condition ($fullAlphaCacheBuild -match '(?m)^\s*version:\s*"0\.1-diag-04"\s*$') -Message 'The runtime-generated full Alpha diagnostic did not deploy with version 0.1-diag-04.'
 
-        # A normal install must replace both a diagnostic source and its stale
-        # compiled schema with the repository's formal Alpha schema.
+        # Unknown diagnostic source bytes must be rejected. After explicit fixture
+        # removal of that source, normal installation still refreshes stale build data.
         $formalInstallUserDir = Join-Path $testRoot 'formal-install-user\Rime'
         $formalInstallBuildDir = Join-Path $formalInstallUserDir 'build'
         New-Item -ItemType Directory -Path $formalInstallBuildDir -Force | Out-Null
@@ -660,6 +660,13 @@ public static class DaMaoFakeDeployer
         $dictionaryHashBeforeInstall = (Get-FileHash -LiteralPath $formalInstallDictionary -Algorithm SHA256).Hash
         $env:DAMAO_WUBI_TEST_RIME_USER_DIR = $formalInstallUserDir
 
+        $diagnosticBefore = (Get-FileHash -LiteralPath $formalInstallSchema).Hash
+        $diagnosticRejected = $false
+        try { & $installScript -RimeUserDir $formalInstallUserDir -WeaselRoot $cacheTestWeaselRoot | Out-Null }
+        catch { $diagnosticRejected = $_.Exception.Message -match 'DM-RESOURCE-CONFLICT' }
+        Assert-True -Condition ($diagnosticRejected -and (Get-FileHash -LiteralPath $formalInstallSchema).Hash -ceq $diagnosticBefore) -Message 'Unknown diagnostic source must be preserved and rejected by formal installation.'
+        # Exact synthetic fixture file only; this is not automatic installer cleanup.
+        Remove-Item -LiteralPath $formalInstallSchema -Force
         & $installScript -RimeUserDir $formalInstallUserDir -WeaselRoot $cacheTestWeaselRoot | Out-Null
         $firstFormalSchema = [System.IO.File]::ReadAllText($formalInstallSchema)
         $firstFormalBuild = [System.IO.File]::ReadAllText($formalInstallBuiltSchema)
@@ -891,7 +898,9 @@ public static class DaMaoFakeDeployer
     Assert-True -Condition ($schema -match '(?m)^\s*max_code_length:\s*4\s*$') -Message 'Schema does not keep the Wubi maximum code length at four.'
     Assert-True -Condition ($schema -match '(?m)^\s*auto_select:\s*true\s*$') -Message 'Schema does not auto-select candidates at the maximum code length.'
     Assert-True -Condition ($schema -notmatch '(?m)^\s*auto_select_unique_candidate:\s*true\s*$') -Message 'The installed schema must not auto-select unique candidates before reaching four codes.'
-    Assert-True -Condition ($schema -match '(?m)^\s*enable_encoder:\s*false\s*$') -Message 'Automatic phrase encoding must remain disabled in the installed schema.'
+    Assert-True -Condition ($schema -match '(?m)^\s*enable_encoder:\s*true\s*$') -Message 'DEV4 contract requires native phrase encoder.'
+    Assert-True -Condition ($schema -match '(?m)^\s*encode_commit_history:\s*true\s*$') -Message 'DEV4 contract requires commit history encoding.'
+    Assert-True -Condition ($schema -match '(?m)^\s*max_phrase_length:\s*4\s*$') -Message 'DEV4 contract explicitly limits phrase length to four.'
     Assert-True -Condition ($schema -match '(?m)^\s*enable_sentence:\s*false\s*$') -Message 'Sentence generation must remain disabled in the installed schema.'
     Assert-True -Condition ($schema -match '(?m)^\s*-\s*\{\s*when:\s*composing,\s*accept:\s*Return,\s*send:\s*Escape\s*\}\s*$') -Message 'Composing Return must cancel the current code instead of committing raw input.'
     Assert-True -Condition ($schema -match '(?m)^\s*-\s*\{\s*when:\s*has_menu,\s*accept:\s*semicolon,\s*send:\s*2\s*\}\s*$') -Message 'Semicolon must select the second candidate when a menu exists.'
