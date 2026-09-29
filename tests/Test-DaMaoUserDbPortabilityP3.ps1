@@ -9,7 +9,7 @@ Set-StrictMode -Version Latest
 
 $repoRoot = Split-Path -Parent $PSScriptRoot
 . (Join-Path $repoRoot 'scripts\DaMao.UserDbPortabilityP3.ps1')
-. (Join-Path $PSScriptRoot 'DaMao.PortabilityBaseline.ps1')
+. (Join-Path $PSScriptRoot 'DaMao.SuccessorBaseline.ps1')
 
 $script:assertionCount = 0
 $script:preflightCaseCount = 0
@@ -117,12 +117,12 @@ function Write-SnapshotP3 {
 }
 
 function Assert-PublicBaselineP3 {
-    $contract = Get-DaMaoPublicBaseline -RepositoryRoot $repoRoot
+    $contract = Get-DaMaoAcceptanceBaseline -RepositoryRoot $repoRoot
     $files = @($contract.current_file_integrity.files)
     $failures = @(Test-DaMaoPublicBaselineManifest -RepositoryRoot $repoRoot -Files $files)
     Assert-P3 ($files.Count -eq 17 -and $failures.Count -eq 0) `
         'DM-P3-CURRENT-BASELINE' `
-        "Public Baseline V1 failed: $($failures -join '; ')"
+        "Public Baseline V2 failed: $($failures -join '; ')"
     return 17
 }
 
@@ -996,7 +996,7 @@ try {
         'The real-librime synthetic A-O matrix is incomplete.'
     $freezeEnd = Assert-PublicBaselineP3
     Assert-P3 ($freezeStart -eq 17 -and $freezeEnd -eq 17) 'DM-P3-SEAL-END' `
-        'A pinned Public Baseline V1 file changed during P3 acceptance.'
+        'A pinned Public Baseline V2 file changed during P3 acceptance.'
     Write-Host ('DaMao UserDB Portability P3 tests passed. ' +
         "Assertions=$script:assertionCount PreflightCases=$script:preflightCaseCount " +
         "NativeCases=$script:nativeCaseCount FailureCases=$script:failureCaseCount " +

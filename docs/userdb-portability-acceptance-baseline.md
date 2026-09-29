@@ -1,5 +1,11 @@
 # Public Baseline V1
 
+Historical V1 is immutable. DEV4 current-worktree acceptance explicitly selects
+V2 through `contracts/acceptance.lock.json`; see
+[the successor contract](dev4-successor-contract.md). The original V1 description
+below applies to its independently runnable historical snapshot. Production
+UserDB identity authorization still uses V1 unchanged.
+
 `contracts/public-baseline-v1.json` is the only portability baseline selected by
 the public repository. It describes the accepted current public source state and
 does not refer to or require commits from another repository.

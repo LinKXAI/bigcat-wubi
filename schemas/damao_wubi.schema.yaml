@@ -55,8 +55,9 @@ translator:
   user_dict: damao_wubi
   enable_user_dict: true
   enable_sentence: false
-  enable_encoder: false
-  encode_commit_history: false
+  enable_encoder: true
+  encode_commit_history: true
+  max_phrase_length: 4
   enable_completion: true
 
 punctuator:

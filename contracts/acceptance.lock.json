@@ -1,0 +1,28 @@
+{
+  "format_version": 1,
+  "current_baseline": "bigcat-wubi-public-baseline-v2",
+  "manifest": {
+    "path": "contracts/public-baseline-v2.json",
+    "sha256": "8418BFCD22CAFBA36C10495E662D71A65D5F05805D3A2A6FEC74991C35A93D46"
+  },
+  "transition": {
+    "path": "contracts/dev4-transition.json",
+    "sha256": "C4980E9F5C930FC7C51B3090EBCCF91839AAA71CFEAD9695817F5541A530B237"
+  },
+  "predecessor": {
+    "path": "contracts/public-baseline-v1.json",
+    "sha256": "C1456CAF3E1BF7EAD3B48D2BB0C21E0D49D1A340935BFEF6EF9EE45ACA02B0F1"
+  },
+  "evidence": {
+    "path": "tests/fixtures/public-baseline-v1/source.zip",
+    "sha256": "C50B65D46253E3DF693020671D5515E60F4470AC06E5F90D38599E2662E618D7"
+  },
+  "verifier": {
+    "path": "tests/DaMao.AcceptancePreflight.ps1",
+    "sha256": "39814D6E4B3F94E34E80592A49EE2B1F3125768F277C84C2A16DA6AA46C33E1C"
+  },
+  "loader": {
+    "path": "tests/DaMao.SuccessorBaseline.ps1",
+    "sha256": "245A04B1656B1F82C4E3A4D0EFC02875CD7C83FEE0B516EA76F43827427D8DA7"
+  }
+}

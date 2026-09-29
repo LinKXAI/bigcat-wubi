@@ -27,6 +27,8 @@ $relativeRequiredFiles = @(
     'scripts\DaMao.WindowsInstallerDependencies.ps1',
     'scripts\Install-DaMao.ps1',
     'scripts\DaMao.Common.ps1',
+    'scripts\DaMao.SchemaUpgrade.ps1',
+    'contracts\wubi-schema-upgrade-v1.json',
     'scripts\DaMao.InstallerState.ps1',
     'scripts\Bootstrap-Weasel.ps1',
     'scripts\Uninstall-BigCat.ps1',
@@ -93,6 +95,12 @@ if ((Test-Path -LiteralPath $installerPath -PathType Leaf) -and
     Assert-InstallerInvariant ($installer -match '(?m)^#include "VERSION"\s*$' -and
         $buildScript -match "installer\\windows\\VERSION") `
         'The installer version is not supplied from installer/windows/VERSION.'
+    Assert-InstallerInvariant ($installer.Contains('#define MyAppNumericVersion "0.9.1.4"') -and
+        $installer.Contains('0.9.1 Dev 4 - Native Wubi learning candidate') -and
+        $buildScript.Contains('BigCatWubi-Quanpin-0.9.1-dev.4-')) 'DEV4 candidate must have independent name and Windows version.'
+    Assert-InstallerInvariant ($buildScript.Contains('contracts/acceptance.lock.json') -and
+        $buildScript.Contains('compiler_files=$compilerFiles') -and $buildScript.Contains('hash-object --path=')) `
+        'Candidate receipt must bind acceptance, complete toolchain inputs and Git byte-preservation audit.'
     Assert-InstallerInvariant ($installer -match '(?m)^AppVersion=\{#MyAppVersion\}\s*$' -and
         $installer -match '(?m)^AppVerName=\{#MyAppName\} \{#MyAppVersion\}\s*$' -and
         $installer -notmatch '(?m)^UninstallDisplayName=') `
@@ -280,6 +288,8 @@ if ((Test-Path -LiteralPath $installerPath -PathType Leaf) -and
         'scripts\Check-QuanpinSharedPolicy.ps1',
         'scripts\Install-DaMao.ps1',
         'scripts\DaMao.Common.ps1',
+        'scripts\DaMao.SchemaUpgrade.ps1',
+        'contracts\wubi-schema-upgrade-v1.json',
         'scripts\DaMao.InstallerState.ps1',
         'scripts\Bootstrap-Weasel.ps1',
         'scripts\Uninstall-BigCat.ps1',

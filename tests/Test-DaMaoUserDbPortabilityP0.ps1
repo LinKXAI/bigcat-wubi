@@ -3,7 +3,7 @@ param()
 
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
-. (Join-Path $PSScriptRoot 'DaMao.PortabilityBaseline.ps1')
+. (Join-Path $PSScriptRoot 'DaMao.SuccessorBaseline.ps1')
 
 function Assert-P0 {
     param(
@@ -15,9 +15,9 @@ function Assert-P0 {
 }
 
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
-$baseline = Get-DaMaoPublicBaseline -RepositoryRoot $repoRoot
-Assert-P0 ([string]$baseline.status -ceq 'Public Baseline V1') 'DM-P0-001' `
-    'The selected contract is not Public Baseline V1.'
+$baseline = Get-DaMaoAcceptanceBaseline -RepositoryRoot $repoRoot
+Assert-P0 ([string]$baseline.status -ceq 'Public Baseline V2') 'DM-P0-001' `
+    'The selected contract is not Public Baseline V2.'
 
 $dimensionNames = @($baseline.identity_dimensions | ForEach-Object { [string]$_.field })
 Assert-P0 ($dimensionNames.Count -eq 3 -and
@@ -61,14 +61,14 @@ Assert-P0 ([string]$baseline.identity_contract.unknown_db_policy -ceq
     'reject_unclassified') 'DM-P0-008' `
     'Unknown databases must be rejected rather than guessed.'
 Assert-P0 (@($baseline.identity_contract.migration_rules).Count -eq 0) 'DM-P0-009' `
-    'Public Baseline V1 must not define automatic migration.'
+    'Public Baseline V2 must not define automatic migration.'
 
 $files = @($baseline.current_file_integrity.files)
 Assert-P0 ($files.Count -eq 17) 'DM-P0-010' `
-    'Public Baseline V1 must pin exactly 17 current files.'
+    'Public Baseline V2 must pin exactly 17 current files.'
 $failures = @(Test-DaMaoPublicBaselineManifest -RepositoryRoot $repoRoot -Files $files)
 Assert-P0 ($failures.Count -eq 0) 'DM-P0-011' `
-    "Public Baseline V1 failed: $($failures -join '; ')"
+    "Public Baseline V2 failed: $($failures -join '; ')"
 
 $probeRoot = Join-Path ([System.IO.Path]::GetTempPath()) `
     ('bigcat-public-baseline-' + [guid]::NewGuid().ToString('N'))
@@ -87,7 +87,7 @@ try {
         [string]$_.path -ceq 'schemas/damao_wubi.schema.yaml'
     } | Select-Object -First 1
     Assert-P0 ($null -ne $probeEntry) 'DM-P0-013' `
-        'The installed schema is absent from Public Baseline V1.'
+        'The installed schema is absent from Public Baseline V2.'
 
     $missingFailures = @(Test-DaMaoPublicBaselineManifest -RepositoryRoot $probeRoot `
         -Files @($probeEntry))
@@ -117,5 +117,5 @@ finally {
     }
 }
 
-Write-Host ("Public Baseline V1 tests passed " +
+Write-Host ("Public Baseline V2 tests passed " +
     "(Identity=valid Integrity=17/17 MutationProbe=passed PowerShell=$($PSVersionTable.PSVersion)).")
